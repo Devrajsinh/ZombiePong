@@ -19,6 +19,7 @@ namespace ZombiePong
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D background, spritesheet;
+        float speed = 140;
 
         Sprite paddle1, paddle2, ball;
 
@@ -103,8 +104,37 @@ namespace ZombiePong
             MouseState ms = Mouse.GetState();
             paddle1.Location = new Vector2(paddle1.Location.X, ms.Y);
             paddle2.Location = new Vector2(paddle2.Location.X, ball.Center.Y);
+
             if (ball.Location.X > 1020 - 16)
-                ball.Velocity = ball.Velocity * new Vector2(-1, 1);
+            {
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+
+                speed *= 1.4f;
+                speed = Math.Min(speed, 300);  // Make speed the lesser of speed and 200
+
+                ball.Velocity = vel * speed;
+            }
+
+            if (paddle1.IsBoxColliding(ball.BoundingBoxRect))
+            {
+                // Now deal with the fact that the two have collided with each other
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+
+                ball.Velocity = vel * speed;
+
+            }
+
+            
+
+
 
           
 
@@ -117,6 +147,7 @@ namespace ZombiePong
             }
 
             base.Update(gameTime);
+
         }
 
         /// <summary>
