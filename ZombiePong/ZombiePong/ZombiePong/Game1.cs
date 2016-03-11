@@ -22,6 +22,7 @@ namespace ZombiePong
         float speed = 140;
 
         Sprite paddle1, paddle2, ball;
+        Random rand;
 
         List<Sprite> zombies = new List<Sprite>();
 
@@ -99,6 +100,7 @@ namespace ZombiePong
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+
             // TODO: Add your update logic here
             ball.Update(gameTime);
             MouseState ms = Mouse.GetState();
@@ -127,13 +129,28 @@ namespace ZombiePong
 
                 // Now control the directional changes
                 vel.X = -vel.X;
-
+                vel.Y = -vel.Y; 
                 ball.Velocity = vel * speed;
 
             }
 
+          
             
 
+              
+
+            if (paddle2.IsBoxColliding(ball.BoundingBoxRect))
+            {
+                // Now deal with the fact that the two have collided with each other
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+                vel.Y = -vel.Y;
+                ball.Velocity = vel * speed;
+
+            }
 
 
           
