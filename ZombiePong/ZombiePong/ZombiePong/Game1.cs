@@ -107,7 +107,7 @@ namespace ZombiePong
             paddle1.Location = new Vector2(paddle1.Location.X, ms.Y);
             paddle2.Location = new Vector2(paddle2.Location.X, ball.Center.Y);
 
-            if (ball.Location.X > 1020 - 16)
+            if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y < paddle2.Center.Y)
             {
                 Vector2 vel = ball.Velocity;
                 vel.Normalize();
@@ -119,7 +119,76 @@ namespace ZombiePong
                 speed = Math.Min(speed, 300);  // Make speed the lesser of speed and 200
 
                 ball.Velocity = vel * speed;
+                ball.Velocity = new Vector2(vel.X * -1, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y));
             }
+
+            if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y > paddle2.Center.Y)
+            {
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+
+                speed *= 1.4f;
+                speed = Math.Min(speed, 300);  // Make speed the lesser of speed and 200
+
+                ball.Velocity = vel * speed;
+                ball.Velocity = new Vector2(vel.X * -1, (float)Math.Cos(ball.Location.Y - paddle2.Center.Y) * -1);
+            }
+
+
+            if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y > paddle1.Center.Y)
+            {
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+
+                speed *= 1.4f;
+                speed = Math.Min(speed, 300);  // Make speed the lesser of speed and 200
+
+                ball.Velocity = vel * speed;
+                ball.Velocity = new Vector2(vel.X * -1, (float)Math.Cos(ball.Location.Y - paddle1.Center.Y) * -1);
+            }
+
+            if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y > paddle2.Center.Y)
+            {
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+
+                speed *= 1.4f;
+                speed = Math.Min(speed, 300);  // Make speed the lesser of speed and 200
+
+                ball.Velocity = vel * speed;
+                ball.Velocity = new Vector2(vel.X * -1, (float)Math.Sin(ball.Location.Y - paddle2.Center.Y) * -1);
+            } 
+
+            if (ball.IsBoxColliding(paddle2.BoundingBoxRect) && ball.Location.Y > paddle1.Center.Y)
+            {
+                Vector2 vel = ball.Velocity;
+                vel.Normalize();
+
+                // Now control the directional changes
+                vel.X = -vel.X;
+
+                speed *= 1.4f;
+                speed = Math.Min(speed, 300);  // Make speed the lesser of speed and 200
+
+                ball.Velocity = vel * speed;
+                ball.Velocity = new Vector2(vel.X * -1, (float)Math.Sin(ball.Location.Y - paddle1.Center.Y) * -1);
+            }
+
+           
+
+            if (ball.Location.Y <= 0) ball.Velocity = new Vector2(ball.Velocity.X, ball.Velocity.Y * -1); //ceiling
+
+            if (ball.Location.Y >= 768) ball.Velocity = new Vector2(ball.Velocity.X, ball.Velocity.Y * -1); //bottom
+
 
             if (paddle1.IsBoxColliding(ball.BoundingBoxRect))
             {
