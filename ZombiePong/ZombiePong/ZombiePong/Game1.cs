@@ -19,6 +19,9 @@ namespace ZombiePong
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D background, spritesheet;
+        Texture2D titleScreen;
+        private float titleScreenTimer = 0f;
+        private float titleScreenDelayTime = 1f;
         float speed = 140;
 
         Sprite paddle1, paddle2, ball;
@@ -34,6 +37,7 @@ namespace ZombiePong
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 768;
             graphics.ApplyChanges();
+          
         }
 
         /// <summary>
@@ -47,6 +51,9 @@ namespace ZombiePong
             // TODO: Add your initialization logic here
 
             base.Initialize();
+             
+           
+                   
         }
 
         /// <summary>
@@ -66,6 +73,9 @@ namespace ZombiePong
             ball = new Sprite(new Vector2(700, 350), spritesheet, new Rectangle(76, 510, 40, 40), new Vector2(250, 0));
 
             SpawnZombie(new Vector2(400, 400), new Vector2(-20, 0));
+            SpawnZombie(new Vector2(400, 400), new Vector2(20, 0));
+            SpawnZombie(new Vector2(400, 400), new Vector2(0, 20));
+            SpawnZombie(new Vector2(400, 400), new Vector2(0, -20));
         }
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace ZombiePong
 
             zombies.Add(zombie);
         }
-
+       
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -227,9 +237,18 @@ namespace ZombiePong
             for (int i = 0; i < zombies.Count; i++)
             {
                 zombies[i].Update(gameTime);
+            }
+                if (zombies.Location.Y <= 0) zombies.Velocity = new Vector2(zombies.Velocity.X, zombies.Velocity.Y * -1); //ceiling
+
+                if (zombies.Location.Y >= 768) zombies.Velocity = new Vector2(zombies.Velocity.X, zombies.Velocity.Y * -1); //bottom
 
                 // Zombie logic goes here.. 
                 zombies[i].FlipHorizontal = false;
+
+                if (zombies[i].IsBoxColliding(ball.BoundingBoxRect))
+                {
+                    ball.Velocity *= -1;
+                }
             }
 
             base.Update(gameTime);
